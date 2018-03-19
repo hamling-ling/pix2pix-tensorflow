@@ -30,7 +30,6 @@ parser.add_argument("--save_freq", type=int, default=5000, help="save model ever
 
 parser.add_argument("--aspect_ratio", type=float, default=1.0, help="aspect ratio of output images (width/height)")
 parser.add_argument("--batch_size", type=int, default=1, help="number of images in batch")
-parser.add_argument("--which_direction", type=str, default="AtoB", choices=["AtoB", "BtoA"])
 parser.add_argument("--ngf", type=int, default=64, help="number of generator filters in first conv layer")
 parser.add_argument("--ndf", type=int, default=64, help="number of discriminator filters in first conv layer")
 parser.add_argument("--scale_size", type=int, default=286, help="scale images to this size before cropping to 256x256")
@@ -158,12 +157,7 @@ def load_examples():
         a_images = preprocess(raw_input[:,:width//2,:])
         b_images = preprocess(raw_input[:,width//2:,:])
 
-    if a.which_direction == "AtoB":
         inputs, targets = [a_images, b_images]
-    elif a.which_direction == "BtoA":
-        inputs, targets = [b_images, a_images]
-    else:
-        raise Exception("invalid direction")
 
     # synchronize seed for image operations so that we do the same operations to both
     # input and output images
@@ -428,7 +422,7 @@ def main():
             raise Exception("checkpoint required for test mode")
 
         # load some options from the checkpoint
-        options = {"which_direction", "ngf", "ndf", "lab_colorization"}
+        options = {"ngf", "ndf", "lab_colorization"}
         with open(os.path.join(a.checkpoint, "options.json")) as f:
             for key, val in json.loads(f.read()).items():
                 if key in options:
