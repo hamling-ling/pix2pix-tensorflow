@@ -6,9 +6,9 @@ import matplotlib.pyplot as plt
 import os
 
 wave_num=10*1000
-sz=64
+sz=256
 def createGraph():
-    rnd_f=0.04+0.16*tf.random_uniform([wave_num,1])
+    rnd_f=tf.random_uniform([wave_num,1], 0.02, 0.1)
     rnd_p=np.pi*tf.random_uniform([wave_num,1])
 
     idx = tf.reshape(tf.constant(np.arange(sz,dtype=np.float32)),[1,sz])
