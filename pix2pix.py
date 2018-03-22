@@ -6,6 +6,7 @@ import tensorflow as tf
 import numpy as np
 import argparse
 import os
+import inspect
 import json
 import glob
 import random
@@ -55,6 +56,13 @@ SZ = 256
 Examples = collections.namedtuple("Examples", "paths, inputs, targets, count, steps_per_epoch")
 Model = collections.namedtuple("Model", "outputs, predict_real, predict_fake, discrim_loss, discrim_grads_and_vars, gen_loss_GAN, gen_loss_L1, gen_grads_and_vars, train")
 
+
+def location(depth=0):
+    frame = inspect.currentframe().f_back
+    file = os.path.basename(frame.f_code.co_filename)
+    func = frame.f_code.co_name
+    line = frame.f_lineno
+    return "{0}:{1}:{2}".format(file,func,line)
 
 def discrim_conv(batch_input, out_channels, stride):
     ### [[0,0],[0,0],[1,1],[0,0]] => [b, h, w+2, c]
