@@ -307,13 +307,19 @@ def create_model(inputs, targets):
     )
 
 def save_plots(inputs, outputs, targets, filename):
+
     plt.clf()
-    for i in range(64):
-        plt.subplot(8,8,i+1)
-        xs = range(len(inputs))
-        plt.plot(inputs[i].reshape(len(inputs[i])))
-        plt.plot(outputs[i].reshape(len(outputs[i])))
-        plt.plot(targets[i].reshape(len(targets[i])))
+    if(64 <= len(inputs)):
+        for i in range(min(64, len(inputs))):
+            plt.subplot(8,8,i+1)
+            plt.plot(inputs[i,0,:,0], linestyle='solid')
+            plt.plot(outputs[i,0,:,0], linestyle='dashed')
+            plt.plot(targets[i,0,:,0], linestyle='dot')
+    else:
+        plt.plot(inputs[0,0,:,0], linestyle='solid')
+        plt.plot(outputs[0,0,:,0], linestyle='dashed')
+        plt.plot(targets[0,0,:,0], linestyle='dotted')
+
     plt.savefig(filename)
     plt.clf()
     print(filename, " saved")
@@ -322,8 +328,11 @@ def save_images(fetches, step=None):
     image_dir = os.path.join(a.output_dir, "images")
     if not os.path.exists(image_dir):
         os.makedirs(image_dir)
+    if(step is None):
+        step = 0
 
-    save_plots(fetches["inputs"], fetches["outputs"], fetches["targets"], "step{0:0>4}.png".format(step))
+    fn = os.path.join(image_dir, "step{0:0>4}.png".format(step))
+    save_plots(fetches["inputs"], fetches["outputs"], fetches["targets"], fn)
 
 def main():
     if a.seed is None:
@@ -413,7 +422,7 @@ def main():
             max_steps = min(examples.steps_per_epoch, max_steps)
             for step in range(max_steps):
                 results = sess.run(display_fetches)
-                save_images(results)
+                save_images(results, step)
             print("rate", (time.time() - start) / max_steps)
         else:
             # training
