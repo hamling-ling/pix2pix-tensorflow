@@ -1,7 +1,7 @@
 
 python pix2pix.py \
   --mode test \
-  --output_dir facades_test \
-  --input_dir facades/val \
-  --checkpoint facades_train
+  --output_dir signal_test \
+  --input_dir data/input/evaluation \
+  --checkpoint signal_train
   
